@@ -137,7 +137,7 @@ class LTCode:
             erase_pos = []
 
         # decode
-        word = main_code.linear_decode(data, params[:5], params[6], ramanujan, expander, erase_pos)
+        word = main_code.linear_decode(data, *params[:5], params[6], ramanujan, expander, erase_pos)
         if k != 0:  # slice the word with k
             return slice_word(word, k)
         elif self.k != 0:  # slice the word with self.k
