@@ -32,6 +32,8 @@ class LTCode:
         else:
             self.k = k  # set k of the class
             self.options = parameters.choose_params(r, epsilon, eps_dist, r_dist, prime_limit, max_k)  # get list of options
+            if self.options == []:
+                raise ValueError("No parameters found :(")
             self.params = min([i for i in self.options if i[-1] >= k], key=lambda x: x[-1])  # take the minimum k
             self.ramanujan, self.expander = main_code.init_graphs(*self.params[:4])  # generate the graphs
             
@@ -87,6 +89,8 @@ class LTCode:
             # no parameters so we need to choose
             k = len(data)
             params_list = parameters.choose_params(self.r, self.epsilon, r_dist, eps_dist, prime_limit, max_k)
+            if params_list == []:
+                raise ValueError("No parameters found :(")
             params = min([p for p in params_list if p >= k], key=lambda x: x[-1])  # the first k we can encode
             expander = None
             ramanujan = None
@@ -125,7 +129,12 @@ class LTCode:
             delta = len(data[0])  # each contains Delta symbols
             # find parameters with same delta and n
             params_list = parameters.choose_params(self.r, self.epsilon, r_dist, eps_dist, prime_limit, max_k)
-            params = [p for p in params_list if p[2]+1 == delta and p[3]*(p[3]*p[3]-1) == n+n][0]
+            if params_list == []:
+                raise ValueError("No parameters found :(")
+            params = [p for p in params_list if p[2]+1 == delta and p[3]*(p[3]*p[3]-1) == n+n]
+            if params == []:
+                raise TypeError("The dimension of the codeword is wrong")
+            params = params[0]
             expander = ramanujan = None  # set the graphs to be none
         else:
             # copy all the parameters and graphs
