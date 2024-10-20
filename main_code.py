@@ -7,8 +7,8 @@ from datetime import datetime
 
 
 def init_graphs(pr, qr, pe, qe):
-    expander_graph = ramanujan(pe, qe)
     ramanujan_graph = ramanujan(pr, qr)
+    expander_graph = ramanujan(pe, qe)
     return ramanujan_graph, expander_graph
 
 

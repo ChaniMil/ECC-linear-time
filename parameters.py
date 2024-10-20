@@ -74,15 +74,16 @@ def find_k_p_q(limit):
     return k_p_q_dict, dict_p_q, dict_q_p
 
 
-def choose_params_by_code_dimension(k):
+def choose_params_by_code_dimension(k, prime_limit=200):
     """
     This function finds the fitting parameters for a given length of k - with the assumption thar qr = qp,
     meaning the num of vertices in the expander is identical to the num of vertices in the ramanujan
     :param k: code dimension - the length of the message to encode
+    :param prime_limit: the max value of primes for the graphs
     :return: parameters for the graphs, b - the length of the blocks, r - rate of code, epsilon
              and the closest length of the word we can encode
     """
-    k_p_q_dict, ps_for_each_q, _ = find_k_p_q(200)
+    k_p_q_dict, ps_for_each_q, _ = find_k_p_q(prime_limit)
     list_of_ks = k_p_q_dict.keys()
     # find the closest value of k that can be encoded
     at_least_k = 0
@@ -113,19 +114,21 @@ def choose_params_by_code_dimension(k):
     return p_r, p_e, q, b, r, epsilon, at_least_k
 
 
-def choose_params_by_exact_rate_epsilon(epsilon, r, padding=False):
+def choose_params_by_exact_rate_epsilon(epsilon, r, padding=False, prime_limit=200, max_k=15000000):
     """
     This function finds fitting parameters for epsilon and r given,
     note that epsilon and r are not changed during this function
     :param epsilon: the distance from MDS code
     :param r: code rate
     :param padding: whether to pad the message
+    :param prime_limit: the max value of primes for the graphs
+    :param max_k: the max value of code dimension
     :return: list with different parameters for the code
     """
-    k_p_q_dict, ps_for_each_q, qs_for_each_p = find_k_p_q(200)  # dictionaries used
+    k_p_q_dict, ps_for_each_q, qs_for_each_p = find_k_p_q(prime_limit)  # dictionaries used
     k_list = []
     for k in k_p_q_dict.keys():
-        if k > 15000000:  # takes very long time to encode
+        if k > max_k:
             continue
         pr, qr = k_p_q_dict[k]
         n_tag = (1 + epsilon / 4) * k  # number of symbols after the left code
@@ -153,16 +156,18 @@ def choose_params_by_exact_rate_epsilon(epsilon, r, padding=False):
     return k_list
 
 
-def choose_params(r, epsilon, r_dist=0.1, eps_dist=0.1):
+def choose_params(r, epsilon, r_dist=0.1, eps_dist=0.1, prime_limit=200, max_k=15000000):
     """
     This function finds the fitting parameters
     :param r: rate wanted
     :param epsilon: epsilon wanted
     :param r_dist: max distance from r wanted
     :param eps_dist: max distance from epsilon wanted
+    :param prime_limit: the max value of primes for the graphs
+    :param max_k: the max value of code dimension
     :return: list with fitting parameters
     """
-    k_p_q_dict, ps_for_each_q, qs_for_each_p = find_k_p_q(200)  # dictionaries used
+    k_p_q_dict, ps_for_each_q, qs_for_each_p = find_k_p_q(prime_limit)  # dictionaries used
     d_list = [p+1 for p in qs_for_each_p.keys()]
     good_prs = []
     for d in d_list:
@@ -175,7 +180,7 @@ def choose_params(r, epsilon, r_dist=0.1, eps_dist=0.1):
         q_list = qs_for_each_p[pr]
         for q in q_list:
             k = q * (q*q - 1) * (pr + 1) // 2
-            if k > 15000000:  # takes very long time to encode
+            if k > max_k:  # takes very long time to encode
                 continue
             n_tag = (1 + epsilon_opt / 4) * k  # the length of the word after the left code
             n = q * (q*q - 1) // 2  # number of vertices in each side, number of blocks

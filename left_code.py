@@ -60,7 +60,7 @@ def decode_ramanujan(graph, codeword, gamma_tag):
     check_symbols = codeword[1]  # the encoded redundancy for each node
 
     # setting up the reed solomon
-    redundancy = round(4 * d * gamma_tag)
+    redundancy = round(4 * d * gamma_tag)  # todo - check that it's int
     rsc1_redundancy = round(gamma_tag*d + 0.5)
     rsc2_redundancy = int(redundancy - rsc1_redundancy)
     rsc1 = RSCodec(rsc1_redundancy, nsize=255)
@@ -87,19 +87,19 @@ def decode_ramanujan(graph, codeword, gamma_tag):
         Ev[node1][vertex_index] = i  # append the index to the first node list
         vertex_index = symbol_counters[node2]
         Ev[node2][vertex_index] = i  # append the index to the second node list
-        symbol_counters[node1] += 1
-        symbol_counters[node2] += 1
+        symbol_counters[node1] += 1  # increment the first counter
+        symbol_counters[node2] += 1  # increment the second counter
 
     is_in_linked_list = [False] * num_of_nodes  # list to make sure there are no duplicates in the linked list
     first_time = True  # if it is first time, we want to run over all B side and not just the neighbors
     while left_to_decode.head:  # while there are still nodes in the linked list
         temp_linked_list = LinkedList()
-        for x in left_to_decode.run_over():
+        for x in left_to_decode.run_over():  # run over the nodes in the current linked list
             is_in_linked_list[x] = False  # reset it for the next iteration to be able to append us
             if finished[x]:  # if we already decoded the node continue to the next one
                 continue
             word_v = [word[j2] for j2 in Ev[x]]  # symbols on the edges of v
-            redundancy_v = check_symbols[x]
+            redundancy_v = check_symbols[x]  # the redundancy of v
             try:
                 rmes, rmesecc, errata_pos = rsc1.decode(word_v + redundancy_v)
             except reedsolo.ReedSolomonError:
