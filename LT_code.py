@@ -34,6 +34,7 @@ class LTCode:
             self.options = parameters.choose_params(r, epsilon, eps_dist, r_dist, prime_limit, max_k)  # get list of options
             self.params = min([i for i in self.options if i[-1] >= k], key=lambda x: x[-1])  # take the minimum k
             self.ramanujan, self.expander = main_code.init_graphs(*self.params[:4])  # generate the graphs
+            
     # ---------------------------------------choosing parameters-----------------------------------------------------
 
     def get_k_list(self, e_close=0.1, r_close=0.1, prime_limit=200, max_k=15000000):
@@ -98,7 +99,7 @@ class LTCode:
         data = bytearray(data)
         if len(data) < params[-1]:  # if we need to pad
             data += bytearray(self.params[-1] - len(data))
-        return main_code.linear_encode(data, *params[:5], params[6], expander, ramanujan)  # encode
+        return main_code.linear_encode(data, *params[:5], params[6], ramanujan, expander)  # encode
 
     def decode(self, data, erase_pos=None, r_dist=0.1, eps_dist=0.1, k=0, prime_limit=200, max_k=15000000):
         """
@@ -136,7 +137,7 @@ class LTCode:
             erase_pos = []
 
         # decode
-        word = main_code.linear_decode(data, params[:5], params[6], expander, ramanujan, erase_pos, erasures=erase_pos)
+        word = main_code.linear_decode(data, params[:5], params[6], ramanujan, expander, erase_pos)
         if k != 0:  # slice the word with k
             return slice_word(word, k)
         elif self.k != 0:  # slice the word with self.k
@@ -145,6 +146,7 @@ class LTCode:
             return word
 
 # ---------------------------------------other functions---------------------------------------------------------
+    
     def decoding_capability(self, errors=0, erasures=0):
         """
         how much can we correct
