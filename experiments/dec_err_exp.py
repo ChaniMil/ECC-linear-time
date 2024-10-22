@@ -2,8 +2,8 @@ import random
 import string
 import numpy as np
 import matplotlib.pyplot as plt
-from src import parameters
-from src.code.main_code import init_graphs, linear_encode, linear_decode
+import parameters
+from main_code import init_graphs, linear_encode, linear_decode
 
 
 def inject_errors(encoded_message, fraction_of_errors, error_type):

@@ -2,10 +2,10 @@ import random
 import string
 from collections import defaultdict
 import numpy as np
-from src.parameters import choose_params
+from parameters import choose_params
 import time
 import matplotlib.pyplot as plt
-from src.code.main_code import init_graphs, linear_encode, linear_decode
+from main_code import init_graphs, linear_encode, linear_decode
 
 
 def run_time_simulation(params_list, word):

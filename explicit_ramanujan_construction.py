@@ -1,6 +1,6 @@
 import galois
-from src.ramanujan_graph.Graph import Graph
-from src.parameters import check_legendre_symbols
+from Graph import Graph
+from parameters import check_legendre_symbols
 
 
 def generate_elements(p):

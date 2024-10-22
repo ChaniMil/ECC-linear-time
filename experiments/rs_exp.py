@@ -1,7 +1,7 @@
 import time
 from reedsolo import RSCodec
-from src.parameters import choose_params_by_code_dimension
-from src.code.main_code import init_graphs, linear_encode, linear_decode
+from parameters import choose_params_by_code_dimension
+from main_code import init_graphs, linear_encode, linear_decode
 
 CODE_DIMENSION = 80808
 C_EXP = 17  # block size for RS - 2^c_exp - 1
